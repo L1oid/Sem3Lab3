@@ -166,6 +166,80 @@ public:
 	}
 };
 
+class Ellipse : public ShapeLC
+{
+protected:
+	float a, b, a_pixel, b_pixel;
+public:
+	Ellipse()
+	{
+		a = 0;
+		b = 0;
+		a_pixel = 0;
+		b_pixel = 0;
+	}
+	Ellipse(float a_p, float b_p)
+	{
+		a = a_p;
+		b = b_p;
+		a_pixel = a * 37.795275590551;
+		b_pixel = b * 37.795275590551;
+	}
+	virtual ~Ellipse() {};
+	virtual float Area()
+	{
+		return 3.1415926535 * (a * b);
+	}
+	virtual string to_String()
+	{
+		str += "Ellipse info: ";
+		str += "Side a: ";
+		str += to_string(a);
+		str += " Side b: ";
+		str += to_string(b);
+		str += " Area: ";
+		str += to_string(Area());
+		str += "\n";
+		return str;
+	}
+	virtual void Draw()
+	{
+		RenderWindow window(VideoMode(500, 200), "SFML Works!");
+		while (window.isOpen())
+		{
+			Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == Event::Closed)
+					window.close();
+			}
+			window.clear(Color(250, 220, 100, 0));
+			CircleShape circle(1.f);
+			circle.setScale(a_pixel, b_pixel);
+			circle.setFillColor(Color(230, 0, 230));
+			window.draw(circle);
+			window.display();
+		}
+	}
+};
+
+class Circle : public Ellipse
+{
+public:
+	Circle(float r_p) : Ellipse(r_p, r_p) {};
+	virtual ~Circle() {};
+	virtual string to_String()
+	{
+		str += "Circle info: ";
+		str += "Radius: ";
+		str += to_string(a);
+		str += " Area: ";
+		str += to_string(Area());
+		str += "\n";
+		return str;
+	}
+};
+
 int main()
 {
 	ShapeLC* shp;
@@ -175,7 +249,7 @@ int main()
 		cout << "1) Triangle" << endl
 			<< "2) Rectangle" << endl
 			<< "3) Square" << endl
-			<< "4) " << endl
+			<< "4) Ellipse" << endl
 			<< "5) " << endl
 			<< "0) Exit" << endl;
 		cout << endl << "Select an action: ";
@@ -186,7 +260,7 @@ int main()
 		case 1:
 			shp = new Triangle(3, 3, 3);
 			cout << shp->to_String() << endl;
-			shp->Move(2, 2);
+			shp->Move(4, 4);
 			shp->Draw();
 			break;
 		case 2:
@@ -198,14 +272,20 @@ int main()
 		case 3:
 			shp = new Square(4);
 			cout << shp->to_String() << endl;
-			shp->Move(2, 2);
+			shp->Move(4, 4);
 			shp->Draw();
 			break;
 		case 4:
-
+			shp = new Ellipse(2, 1);
+			cout << shp->to_String() << endl;
+			shp->Move(4, 4);
+			shp->Draw();
 			break;
 		case 5:
-
+			shp = new Circle(4);
+			cout << shp->to_String() << endl;
+			shp->Move(4, 4);
+			shp->Draw();
 			break;
 		default:
 			if (key != 0)
