@@ -240,9 +240,47 @@ public:
 	}
 };
 
+class Cylinder
+{
+protected:
+	float h;
+	string str;
+	ShapeLC* shp;
+public:
+	Cylinder()
+	{
+		h = 0;
+		shp = 0;
+	}
+	Cylinder(float h_p, ShapeLC* shp_p)
+	{
+		h = h_p;
+		shp = shp_p;
+	}
+	~Cylinder() {};
+	float Volume()
+	{
+		return h * shp->Area();
+	}
+	string to_String()
+	{
+		str += "Cylinder info: ";
+		str += "Height h: ";
+		str += to_string(h);
+		str += " Base area: ";
+		str += to_string(shp->Area());
+		str += " Volume: ";
+		str += to_string(Volume());
+		str += "\n";
+		return str;
+	}
+};
+
 int main()
 {
 	ShapeLC* shp;
+	Cylinder myCylinder;
+	float temp;
 	int key = 0;
 	do
 	{
@@ -250,7 +288,8 @@ int main()
 			<< "2) Rectangle" << endl
 			<< "3) Square" << endl
 			<< "4) Ellipse" << endl
-			<< "5) " << endl
+			<< "5) Circle" << endl
+			<< "6) Cylinder" << endl
 			<< "0) Exit" << endl;
 		cout << endl << "Select an action: ";
 		cin >> key;
@@ -286,6 +325,10 @@ int main()
 			cout << shp->to_String() << endl;
 			shp->Move(4, 4);
 			shp->Draw();
+			break;
+		case 6:
+			myCylinder = Cylinder(3, new Circle(4));
+			cout << myCylinder.to_String() << endl;
 			break;
 		default:
 			if (key != 0)
