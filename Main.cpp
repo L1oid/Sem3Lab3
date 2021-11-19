@@ -30,25 +30,33 @@ public:
 class Triangle : public ShapeLC
 {
 private:
-	float a, b, c, p, r, r_pixel;
+	float ax, ay, bx, by, cx, cy, a, b, c, p;
 public:
 	Triangle() 
 	{
 		a = 0;
 		b = 0;
 		c = 0;
+		ax = 0;
+		ay = 0;
+		bx = 0;
+		by = 0;
+		cx = 0;
+		cy = 0;
 		p = 0;
-		r = 0;
-		r_pixel = 0;
 	}
-	Triangle(float a_p, float b_p, float c_p)
+	Triangle(float a_x, float a_y, float b_x, float b_y, float c_x, float c_y)
 	{
-		a = a_p;
-		b = b_p;
-		c = c_p;
+		ax = a_x;
+		ay = a_y;
+		bx = b_x;
+		by = b_y;
+		cx = c_x;
+		cy = c_y;
+		a = sqrt(((bx - ax)*(bx - ax)) + ((by - ay)*(by - ay)));
+		b = sqrt(((cx - bx)*(cx - bx)) + ((cy - by)*(cy - by)));
+		c = sqrt(((cx - ax)*(cx - ax)) + ((cy - ay)*(cy - ay)));
 		p = (a + b + c) / 2;
-		r = (a * b * c) / (4 * sqrt(p * (p - a) * (p - b) * (p - c)));
-		r_pixel = r * 37.795275590551;
 	}
 	virtual ~Triangle() {};
 	virtual float Area()
@@ -73,7 +81,7 @@ public:
 	}
 	virtual void Draw()
 	{
-		RenderWindow window(VideoMode(500, 200), "SFML Works!");
+		RenderWindow window(VideoMode(800, 800), "SFML Works!");
 		while (window.isOpen())
 		{
 			Event event;
@@ -83,10 +91,14 @@ public:
 					window.close();
 			}
 			window.clear(Color(250, 220, 100, 0));
-			CircleShape triangle(r_pixel, 3);
-			triangle.setPosition(x, y);
-			triangle.setFillColor(Color::Blue);
-			window.draw(triangle);
+			ConvexShape convex;
+			convex.setPointCount(3);
+			convex.setPoint(0, Vector2f(ax * 37.795275590551, ay * 37.795275590551));
+			convex.setPoint(1, Vector2f(bx * 37.795275590551, by * 37.795275590551));
+			convex.setPoint(2, Vector2f(cx * 37.795275590551, cy * 37.795275590551));
+			convex.setFillColor(Color::Black);
+			convex.move(x * 37.795275590551, y * 37.795275590551);
+			window.draw(convex);
 			window.display();
 		}
 	}
@@ -279,7 +291,7 @@ public:
 int main()
 {
 	ShapeLC* shp;
-	Cylinder myCylinder;
+	Cylinder clr;
 	float temp;
 	int key = 0;
 	do
@@ -297,38 +309,38 @@ int main()
 		switch (key)
 		{
 		case 1:
-			shp = new Triangle(3, 3, 3);
+			shp = new Triangle(1, 1, 2, 2, 1, 3);
 			cout << shp->to_String() << endl;
-			shp->Move(4, 4);
+			shp->Move(5, 1);
 			shp->Draw();
 			break;
 		case 2:
 			shp = new Rectangle(3, 5);
 			cout << shp->to_String() << endl;
-			shp->Move(4, 4);
+			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 3:
 			shp = new Square(4);
 			cout << shp->to_String() << endl;
-			shp->Move(4, 4);
+			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 4:
 			shp = new Ellipse(2, 1);
 			cout << shp->to_String() << endl;
-			shp->Move(4, 4);
+			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 5:
 			shp = new Circle(4);
 			cout << shp->to_String() << endl;
-			shp->Move(4, 4);
+			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 6:
-			myCylinder = Cylinder(3, new Circle(4));
-			cout << myCylinder.to_String() << endl;
+			clr = Cylinder(3, new Circle(4));
+			cout << clr.to_String() << endl;
 			break;
 		default:
 			if (key != 0)
