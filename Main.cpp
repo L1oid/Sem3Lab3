@@ -5,6 +5,125 @@
 using namespace sf;
 using namespace std;
 
+class Excp1
+{
+private:
+	float a, b;
+	string msg;
+public:
+	Excp1(float a_p, float b_p)
+	{
+		a = a_p;
+		b = b_p;
+		msg = "Side lengths must be greater than 0. Invalid values: ";
+	}
+	float GetValue_a()
+	{
+		return a;
+	}
+	float GetValue_b()
+	{
+		return b;
+	}
+	string GetMsg()
+	{
+		return msg;
+	}
+};
+
+class Excp2
+{
+private:
+	float ax, ay, bx, by, cx, cy;
+	string msg;
+public:
+	Excp2(float ax_p, float ay_p, float bx_p, float by_p, float cx_p, float cy_p)
+	{
+		ax = ax_p;
+		ay = ay_p;
+		bx = bx_p;
+		by = by_p;
+		cx = cx_p;
+		cy = cy_p;
+		msg = "Invalid coordinates: ";
+	}
+	float GetValue_ax()
+	{
+		return ax;
+	}
+	float GetValue_ay()
+	{
+		return ay;
+	}
+	float GetValue_bx()
+	{
+		return bx;
+	}
+	float GetValue_by()
+	{
+		return by;
+	}
+	float GetValue_cx()
+	{
+		return cx;
+	}
+	float GetValue_cy()
+	{
+		return cy;
+	}
+	string GetMsg()
+	{
+		return msg;
+	}
+};
+
+class Excp3
+{
+private:
+	float r1, r2;
+	string msg;
+public:
+	Excp3(float r1_p, float r2_p)
+	{
+		r1 = r1_p;
+		r2 = r2_p;
+		msg = "The radius must be greater than 0. Invalid values: ";
+	}
+	float GetValue_a()
+	{
+		return r1;
+	}
+	float GetValue_b()
+	{
+		return r2;
+	}
+	string GetMsg()
+	{
+		return msg;
+	}
+};
+
+class Excp4
+{
+private:
+	float h;
+	string msg;
+public:
+	Excp4(float h_p)
+	{
+		h = h_p;
+		msg = "The height must be greater than 0. Invalid values: ";
+	}
+	float GetValue_h()
+	{
+		return h;
+	}
+	string GetMsg()
+	{
+		return msg;
+	}
+};
+
 class ShapeLC
 {
 protected:
@@ -32,7 +151,7 @@ class Triangle : public ShapeLC
 private:
 	float ax, ay, bx, by, cx, cy, a, b, c, p;
 public:
-	Triangle() 
+	Triangle()
 	{
 		a = 0;
 		b = 0;
@@ -47,15 +166,20 @@ public:
 	}
 	Triangle(float a_x, float a_y, float b_x, float b_y, float c_x, float c_y)
 	{
+		if ((a_x == b_x && a_x == c_x && b_x == c_x) || (a_y == b_y && a_y == c_y && b_y == c_y) || (a_x == b_x && a_y == b_y) || (a_x == c_x && a_y == c_y) || (b_x == c_x && b_y == c_y))
+		{
+			Excp2 e2(a_x, a_y, b_x, b_y, c_x, c_y);
+			throw e2;
+		}
 		ax = a_x;
 		ay = a_y;
 		bx = b_x;
 		by = b_y;
 		cx = c_x;
 		cy = c_y;
-		a = sqrt(((bx - ax)*(bx - ax)) + ((by - ay)*(by - ay)));
-		b = sqrt(((cx - bx)*(cx - bx)) + ((cy - by)*(cy - by)));
-		c = sqrt(((cx - ax)*(cx - ax)) + ((cy - ay)*(cy - ay)));
+		a = sqrt(((bx - ax) * (bx - ax)) + ((by - ay) * (by - ay)));
+		b = sqrt(((cx - bx) * (cx - bx)) + ((cy - by) * (cy - by)));
+		c = sqrt(((cx - ax) * (cx - ax)) + ((cy - ay) * (cy - ay)));
 		p = (a + b + c) / 2;
 	}
 	virtual ~Triangle() {};
@@ -118,6 +242,12 @@ public:
 	}
 	Rectangle(float a_p, float b_p)
 	{
+		
+		if (a_p <= 0 || b_p <= 0)
+		{
+			Excp1 e1(a_p, b_p);
+			throw e1;
+		}
 		a = a_p;
 		b = b_p;
 		a_pixel = a * 37.795275590551;
@@ -142,7 +272,7 @@ public:
 	}
 	virtual void Draw()
 	{
-		RenderWindow window(VideoMode(500, 200), "SFML Works!");
+		RenderWindow window(VideoMode(800, 800), "SFML Works!");
 		while (window.isOpen())
 		{
 			Event event;
@@ -152,7 +282,7 @@ public:
 					window.close();
 			}
 			window.clear(Color(250, 220, 100, 0));
-			RectangleShape rectangle(Vector2f(a_pixel , b_pixel));
+			RectangleShape rectangle(Vector2f(a_pixel, b_pixel));
 			rectangle.setPosition(x, y);
 			rectangle.setFillColor(Color(175, 180, 240));
 			window.draw(rectangle);
@@ -192,6 +322,11 @@ public:
 	}
 	Ellipse(float a_p, float b_p)
 	{
+		if (a_p <= 0 || b_p <= 0)
+		{
+			Excp3 e3(a_p, b_p);
+			throw e3;
+		}
 		a = a_p;
 		b = b_p;
 		a_pixel = a * 37.795275590551;
@@ -216,7 +351,7 @@ public:
 	}
 	virtual void Draw()
 	{
-		RenderWindow window(VideoMode(500, 200), "SFML Works!");
+		RenderWindow window(VideoMode(800, 800), "SFML Works!");
 		while (window.isOpen())
 		{
 			Event event;
@@ -266,6 +401,11 @@ public:
 	}
 	Cylinder(float h_p, ShapeLC* shp_p)
 	{
+		if (h_p <= 0)
+		{
+			Excp4 e4(h_p);
+			throw e4;
+		}
 		h = h_p;
 		shp = shp_p;
 	}
@@ -292,7 +432,8 @@ int main()
 {
 	ShapeLC* shp;
 	Cylinder clr;
-	float temp;
+	float a, b;
+	float ax, ay, bx, by, cx, cy;
 	int key = 0;
 	do
 	{
@@ -309,37 +450,114 @@ int main()
 		switch (key)
 		{
 		case 1:
-			shp = new Triangle(1, 1, 2, 2, 1, 3);
+			ax = 1, ay = 2, bx = 1, by = 1, cx = 3, cy = 2;
+			try
+			{
+				shp = new Triangle(ax, ay, bx, by, cx, cy);
+			}
+			catch(Excp2& e2)
+			{
+				cout << e2.GetMsg() << e2.GetValue_ax() << " " << e2.GetValue_ay() << " " << e2.GetValue_bx() << " " << e2.GetValue_by() << " " << e2.GetValue_cx() << " " << e2.GetValue_cy() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
 			cout << shp->to_String() << endl;
-			shp->Move(5, 1);
+			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 2:
-			shp = new Rectangle(3, 5);
+			a = 2, b = 3;
+			try
+			{
+				shp = new Rectangle(a, b);
+			}
+			catch (Excp1& e1)
+			{
+				cout << e1.GetMsg() << e1.GetValue_a() << " " << e1.GetValue_b() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
 			cout << shp->to_String() << endl;
 			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 3:
-			shp = new Square(4);
+			a = 4;
+			try
+			{
+				shp = new Square(a);
+			}
+			catch (Excp1& e1)
+			{
+				cout << e1.GetMsg() << e1.GetValue_a() << " " << e1.GetValue_b() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
 			cout << shp->to_String() << endl;
 			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 4:
-			shp = new Ellipse(2, 1);
+			a = 3, b = 1;
+			try
+			{
+				shp = new Ellipse(a, b);
+			}
+			catch (Excp3& e3)
+			{
+				cout << e3.GetMsg() << e3.GetValue_a() << " " << e3.GetValue_b() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
 			cout << shp->to_String() << endl;
 			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 5:
-			shp = new Circle(4);
+			a = 4;
+			try
+			{
+				shp = new Circle(a);
+			}
+			catch (Excp3& e3)
+			{
+				cout << e3.GetMsg() << e3.GetValue_a() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
 			cout << shp->to_String() << endl;
 			shp->Move(0, 0);
 			shp->Draw();
 			break;
 		case 6:
-			clr = Cylinder(3, new Circle(4));
+			try
+			{
+				clr = Cylinder(3, new Circle(4));
+			}
+			catch (Excp1& e1)
+			{
+				cout << e1.GetMsg() << e1.GetValue_a() << " " << e1.GetValue_b() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
+			catch (Excp2& e2)
+			{
+				cout << e2.GetMsg() << e2.GetValue_ax() << " " << e2.GetValue_ay() << " " << e2.GetValue_bx() << " " << e2.GetValue_by() << " " << e2.GetValue_cx() << " " << e2.GetValue_cy() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
+			catch (Excp3& e3)
+			{
+				cout << e3.GetMsg() << e3.GetValue_a() << " " << e3.GetValue_b() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
+			catch (Excp4& e4)
+			{
+				cout << e4.GetMsg() << e4.GetValue_h() << endl;
+				cout << "Try again..." << endl << endl;
+				break;
+			}
 			cout << clr.to_String() << endl;
 			break;
 		default:
