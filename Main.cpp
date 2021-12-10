@@ -387,19 +387,20 @@ public:
 	}
 };
 
+template <typename T>
 class Cylinder
 {
 protected:
 	float h;
 	string str;
-	ShapeLC* shp;
+	T shp;
 public:
 	Cylinder()
 	{
 		h = 0;
 		shp = 0;
 	}
-	Cylinder(float h_p, ShapeLC* shp_p)
+	Cylinder(float h_p, T shp_p)
 	{
 		if (h_p <= 0)
 		{
@@ -431,7 +432,7 @@ public:
 int main()
 {
 	ShapeLC* shp;
-	Cylinder clr;
+	Cylinder<ShapeLC*> clr;
 	float a, b;
 	float ax, ay, bx, by, cx, cy;
 	int key = 0;
@@ -532,7 +533,7 @@ int main()
 		case 6:
 			try
 			{
-				clr = Cylinder(3, new Circle(4));
+				clr = Cylinder<ShapeLC*>(3, new Circle(4));
 			}
 			catch (Excp1& e1)
 			{
